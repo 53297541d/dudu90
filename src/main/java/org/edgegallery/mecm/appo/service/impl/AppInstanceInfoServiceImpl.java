@@ -108,8 +108,8 @@ public class AppInstanceInfoServiceImpl implements AppInstanceInfoService {
 
         Optional<AppoTenant> info = appoTenantRepository.findById(tenantId);
         if (info.isPresent()) {
-            List<AppInstanceInfo> record = appInstanceInfoRepository.findByTenantId(tenantId);
-            if (record.size() == Constants.MAX_ENTRY_PER_TENANT_PER_MODEL) {
+            List<AppInstanceInfo> result = appInstanceInfoRepository.findByTenantId(tenantId);
+            if (result.size() == Constants.MAX_ENTRY_PER_TENANT_PER_MODEL) {
                 LOGGER.error("Max app instance's limit {} reached", Constants.MAX_ENTRY_PER_TENANT_PER_MODEL);
                 throw new AppoException(Constants.MAX_LIMIT_REACHED_ERROR);
             }
@@ -249,11 +249,11 @@ public class AppInstanceInfoServiceImpl implements AppInstanceInfoService {
 
         Optional<AppoTenant> info = appoTenantRepository.findById(tenantId);
         if (info.isPresent()) {
-            List<AppRuleTask> record = appRuleTaskRepository.findByTenantId(tenantId);
-            if (record.size() == Constants.MAX_ENTRY_PER_TENANT_PER_MODEL) {
+            List<AppRuleTask> ruleRecord = appRuleTaskRepository.findByTenantId(tenantId);
+            if (ruleRecord.size() == Constants.MAX_ENTRY_PER_TENANT_PER_MODEL) {
                 LOGGER.error("Max app rule task's limit {} reached, delete old entry",
                         Constants.MAX_ENTRY_PER_TENANT_PER_MODEL);
-                appRuleTaskRepository.deleteById(record.get(0).getAppRuleTaskId());
+                appRuleTaskRepository.deleteById(ruleRecord.get(0).getAppRuleTaskId());
             }
         } else {
             if (appoTenantRepository.count() == Constants.MAX_TENANTS) {

@@ -68,6 +68,8 @@ public class AppoDbHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppoDbHandler.class);
 
+    private static final String INSTANCE_INFO_NOT_EXIST = "app instance info does not exist";
+
     private final AppInstanceInfoService appInstanceInfoService;
 
     @Autowired
@@ -121,7 +123,7 @@ public class AppoDbHandler {
         List<AppInstanceInfoDto> appInstanceInfosDto = new LinkedList<>();
         List<AppInstanceInfo> appInstanceInfos = appInstanceInfoService.getAllAppInstanceInfo(tenantId);
         if (appInstanceInfos == null || appInstanceInfos.isEmpty()) {
-            LOGGER.error("app instance info does not exist");
+            LOGGER.error(INSTANCE_INFO_NOT_EXIST);
             throw new NoSuchElementException(Constants.RECORD_NOT_FOUND);
         }
 
@@ -140,7 +142,7 @@ public class AppoDbHandler {
             }
         }
         if (appInstanceInfosDto.isEmpty()) {
-            LOGGER.error("app instance info does not exist");
+            LOGGER.error(INSTANCE_INFO_NOT_EXIST);
             throw new NoSuchElementException(Constants.RECORD_NOT_FOUND);
         }
         return new ResponseEntity<>(new AppoResponse(appInstanceInfosDto), HttpStatus.OK);
@@ -171,7 +173,7 @@ public class AppoDbHandler {
             appInstanceInfosDto.add(mapper.map(mecHostAppInstanceInfo, AppInstanceInfoDto.class));
         }
         if (appInstanceInfosDto.isEmpty()) {
-            LOGGER.error("app instance info does not exist");
+            LOGGER.error(INSTANCE_INFO_NOT_EXIST);
             throw new NoSuchElementException(Constants.RECORD_NOT_FOUND);
         }
         return new ResponseEntity<>(new AppoResponse(appInstanceInfosDto), HttpStatus.OK);
