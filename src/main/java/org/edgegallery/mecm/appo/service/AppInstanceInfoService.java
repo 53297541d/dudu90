@@ -43,10 +43,10 @@ public interface AppInstanceInfoService {
     /**
      * Retrieves all application instance information by mec_host.
      *
-     * @param mec_host mec_host
+     * @param mecHost mecHost
      * @return application instance information
      */
-    List<AppInstanceInfo> getAllAppInstanceInfoByMecHost(String mec_host);
+    List<AppInstanceInfo> getAllAppInstanceInfoByMecHost(String mecHost);
 
     /**
      * Retrieves application instance information by mec host.
