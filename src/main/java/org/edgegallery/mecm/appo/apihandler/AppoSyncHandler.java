@@ -18,6 +18,7 @@ package org.edgegallery.mecm.appo.apihandler;
 
 import static org.edgegallery.mecm.appo.utils.Constants.TENENT_ID_REGEX;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -40,6 +41,7 @@ import org.edgegallery.mecm.appo.model.AppInstanceInfo;
 import org.edgegallery.mecm.appo.service.AppInstanceInfoService;
 import org.edgegallery.mecm.appo.service.impl.RestServiceImpl;
 import org.edgegallery.mecm.appo.utils.AppoResponse;
+import org.edgegallery.mecm.appo.utils.AppoV2Response;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,9 +94,10 @@ public class AppoSyncHandler {
     @PostMapping(value = "/tenants/{tenant_id}/app_instance_infos/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MECM_TENANT') || hasRole('MECM_ADMIN')")
     public ResponseEntity<AppoResponse> syncAppInstanceInfos(@ApiParam(value = "access token")
-            @RequestHeader("access_token") String accessToken,
-            @ApiParam(value = "tenant id") @PathVariable("tenant_id")
-            @Pattern(regexp = TENENT_ID_REGEX) @Size(max = 64) String tenantId) {
+                                                             @RequestHeader("access_token") String accessToken,
+                                                             @ApiParam(value = "tenant id") @PathVariable("tenant_id")
+                                                             @Pattern(regexp = TENENT_ID_REGEX)
+                                                             @Size(max = 64) String tenantId) {
         synchronizeAppInstancesInfoFromEdges(tenantId, accessToken);
         return new ResponseEntity<>(new AppoResponse("accepted"), HttpStatus.ACCEPTED);
     }
@@ -122,13 +125,22 @@ public class AppoSyncHandler {
             String uri = sb.append("/lcmcontroller/v2/tenants/").append(tenantId)
                             .append("/app_instances/sync_updated").toString();
 
-            ResponseEntity<SyncUpdatedAppInstanceDto> updateResponse = syncService.syncRecords(uri,
-                    SyncUpdatedAppInstanceDto.class, accessToken);
-            SyncUpdatedAppInstanceDto syncUpdatedAppInstDto = updateResponse.getBody();
+            ResponseEntity<AppoV2Response> updateResponse = syncService.syncRecords(uri,
+                    AppoV2Response.class, accessToken);
+            AppoV2Response appoV2Response = updateResponse.getBody();
+            if (appoV2Response == null || appoV2Response.getData() == null) {
+                logger.info("received null data in the response, skip update");
+                return;
+            }
+            String data = new Gson().toJson(appoV2Response.getData());
+
+            SyncUpdatedAppInstanceDto syncUpdatedAppInstanceDto = new Gson().fromJson(data,
+                                                                                     SyncUpdatedAppInstanceDto.class);
+
             // Update table
             String[] mecmIp = appLcmEndPoint.split(":");
-            if (syncUpdatedAppInstDto != null && syncUpdatedAppInstDto.getAppInstanceUpdatedRecs() != null) {
-                for (AppInstanceInfoDto updatedRecord : syncUpdatedAppInstDto.getAppInstanceUpdatedRecs()) {
+            if (syncUpdatedAppInstanceDto != null && syncUpdatedAppInstanceDto.getAppInstanceUpdatedRecs() != null) {
+                for (AppInstanceInfoDto updatedRecord : syncUpdatedAppInstanceDto.getAppInstanceUpdatedRecs()) {
                     updateSyncAppInstanceRecords(tenantId, mecmIp[0], updatedRecord);
                 }
             }
@@ -143,9 +155,17 @@ public class AppoSyncHandler {
             String uri = sb.append("/lcmcontroller/v2/tenants/").append(tenantId).append("/app_instances"
                     + "/sync_deleted").toString();
 
-            ResponseEntity<SyncDeletedAppInstanceDto> updateResponse = syncService.syncRecords(uri,
-                    SyncDeletedAppInstanceDto.class, accessToken);
-            SyncDeletedAppInstanceDto syncDeletedAppInstDto = updateResponse.getBody();
+            ResponseEntity<AppoV2Response> deleteResponse = syncService.syncRecords(uri,
+                    AppoV2Response.class, accessToken);
+            AppoV2Response appoV2Response = deleteResponse.getBody();
+            if (appoV2Response == null || appoV2Response.getData() == null) {
+                logger.info("received null data in the response, skip update");
+                return;
+            }
+            String data = new Gson().toJson(appoV2Response.getData());
+            SyncDeletedAppInstanceDto syncDeletedAppInstDto = new Gson().fromJson(data,
+                                                                                     SyncDeletedAppInstanceDto.class);
+
             // Update table
             if (syncDeletedAppInstDto != null && syncDeletedAppInstDto.getAppInstanceDeletedRecs() != null) {
                 for (AppInstanceDeletedDto deletedRecord : syncDeletedAppInstDto.getAppInstanceDeletedRecs()) {
@@ -163,7 +183,7 @@ public class AppoSyncHandler {
         if (updatedRecord.getOperationalStatus() == null) {
             updatedRecord.setOperationalStatus("Instantiated");
         }
-
+        logger.info("sync record {}", updatedRecord);
         try {
             appInstanceInfoService.getAppInstanceInfo(tenantId, updatedRecord.getAppInstanceId());
 

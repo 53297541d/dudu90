@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.edgegallery.mecm.appo.apihandler.dto.SyncBaseDto;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -29,7 +30,7 @@ import org.springframework.validation.annotation.Validated;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppoV2Response {
+public class AppoV2Response implements SyncBaseDto {
 
     private Object data;
 
