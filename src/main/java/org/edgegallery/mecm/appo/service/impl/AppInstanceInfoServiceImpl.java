@@ -86,10 +86,10 @@ public class AppInstanceInfoServiceImpl implements AppInstanceInfoService {
     }
 
     @Override
-    public List<AppInstanceInfo> getAllAppInstanceInfoByMecHost(String mec_host) {
-        LOGGER.debug("Retrieving application instances of mec_host {}", mec_host);
+    public List<AppInstanceInfo> getAllAppInstanceInfoByMecHost(String mecHost) {
+        LOGGER.debug("Retrieving application instances of mec_host {}", mecHost);
 
-        return appInstanceInfoRepository.findByMecHost(mec_host);
+        return appInstanceInfoRepository.findByMecHost(mecHost);
     }
 
     @Override
