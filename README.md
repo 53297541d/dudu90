@@ -9,6 +9,28 @@ Appo项目基于docker容器化，在编译和构建过程中分为两个步骤�
 #### 编译
 Appo是一个基于jdk1.8和maven编写的Java程序。 编译只需执行 mvn install 即可编译生成jar包
 
+  
+#### 编译父依赖仓库
+
+  - 拉取代码
+    ```
+     git clone https://gitee.com/edgegallery/eg-parent.git
+    ```
+  - 安装依赖
+    ```
+     mvn clean install
+    ```
+#### 编译APPO
+
+   - 拉取代码
+     ```
+      git clone https://gitee.com/edgegallery/mecm-appo.git
+     ```
+   - 安装依赖
+     ```
+      maven clean install
+     ```
+
 #### 构建镜像
 Appo 项目提供了一个用于镜像的 dockerfile 文件。 制作镜像时可以使用以下命令
 
