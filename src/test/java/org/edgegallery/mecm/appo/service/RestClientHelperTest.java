@@ -13,7 +13,6 @@ import org.edgegallery.mecm.appo.apihandler.dto.AppInstanceInfoDto;
 import org.edgegallery.mecm.appo.exception.AppoException;
 import org.edgegallery.mecm.appo.model.AppInstanceInfo;
 import org.edgegallery.mecm.appo.service.impl.AppoProcessflowServiceImpl;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,19 +62,15 @@ public class RestClientHelperTest {
         method1.invoke(appoProcessflowService, obj1);
     }
 
-    @Test
-    public void testProcessflowException() {
+    @Test(expected = InvocationTargetException.class)
+    public void testProcessflowException()
+        throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         AppoProcessflowServiceImpl appoProcessflowService = new AppoProcessflowServiceImpl();
         Object[] obj1 = {"processInstanceId", "OK"};
-        Method method1 = null;
-        try {
-            method1 = AppoProcessflowServiceImpl.class
-                .getDeclaredMethod("processflowException", String.class, String.class);
-            method1.setAccessible(true);
-            method1.invoke(appoProcessflowService, obj1);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            Assert.assertNotNull(e);
-        }
+        Method method1 = AppoProcessflowServiceImpl.class
+            .getDeclaredMethod("processflowException", String.class, String.class);
+        method1.setAccessible(true);
+        method1.invoke(appoProcessflowService, obj1);
 
     }
 

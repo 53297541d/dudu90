@@ -256,7 +256,13 @@ public class AppoBatchDeployTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String getAllResponse = getAllMvcResult.getResponse().getContentAsString();
-        Assert.assertNotNull(getAllResponse);
+        // Assert.assertEquals(getAllResponse);
+        Assert.assertEquals("{\"response\":[{\"appInstanceId\":\"" + appInstanceId + "\","
+                + "\"appPackageId\":\"f20358433cf8eb4719a62a49ed118c9b\","
+                + "\"appName\":\"face_recognitionBatch\",\"appId\":\"f50358433cf8eb4719a62a49ed118c9b\","
+                + "\"appDescriptor\":\"face_recognition\",\"mecHost\":\"3.3.3.3\",\"mepmHost\":null,"
+                + "\"operationalStatus\":\"Creating\",\"operationInfo\":null}]}",
+            getAllResponse);
         // Get application instance id
         ResultActions getResult =
                 mvc.perform(MockMvcRequestBuilders.get(APPO_TENANT + TENANT_ID
@@ -267,7 +273,12 @@ public class AppoBatchDeployTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String getResponse = getMvcResult.getResponse().getContentAsString();
-        Assert.assertNotNull(getResponse);
+        Assert.assertEquals("{\"response\":{\"appInstanceId\":\"" + appInstanceId + "\","
+                + "\"appPackageId\":\"f20358433cf8eb4719a62a49ed118c9b\","
+                + "\"appName\":\"face_recognitionBatch\",\"appId\":\"f50358433cf8eb4719a62a49ed118c9b\","
+                + "\"appDescriptor\":\"face_recognition\",\"mecHost\":\"3.3.3.3\",\"mepmHost\":null,"
+                + "\"operationalStatus\":\"Creating\",\"operationInfo\":null}}",
+            getResponse);
         /***********************************************************************************************/
         instantiateAppInstanceFlowUrls(resetServer(server), appInstanceId);
 
