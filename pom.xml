@@ -19,9 +19,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-      <groupId>org.edgegallery</groupId>
-      <artifactId>eg-parent</artifactId>
-      <version>1.0.0</version>
+        <groupId>org.edgegallery</groupId>
+        <artifactId>eg-parent</artifactId>
+        <version>1.0.0</version>
     </parent>
 
     <groupId>org.edgegallery.mecm</groupId>
@@ -29,14 +29,14 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <name>appo</name>
-    <description>Application Orchestrator</description>  
+    <description>Application Orchestrator</description>
 
     <dependencies>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
             <version>1.4.199</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -88,7 +88,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.3.25.Final</version>
         </dependency>
         <!-- Tomcat -->
         <dependency>
@@ -274,8 +273,14 @@
         </dependency>
 
         <dependency>
-          <groupId>org.junit.jupiter</groupId>
-          <artifactId>junit-jupiter-api</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -284,11 +289,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -349,7 +349,7 @@
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
@@ -371,7 +371,15 @@
                     <artifactId>json-smart</artifactId>
                     <groupId>net.minidev</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
         </dependency>
         <dependency>
             <artifactId>json-smart</artifactId>
@@ -496,7 +504,7 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
@@ -532,152 +540,152 @@
     </dependencyManagement>
 
     <build>
-       <plugins>
-           <plugin>
-               <configuration>
-                   <compilerArgument>-Xlint:all</compilerArgument>
-                   <showDeprecation>true</showDeprecation>
-                   <showWarnings>true</showWarnings>
-                   <source>${java.version}</source>
-                   <target>${java.version}</target>
-               </configuration>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-compiler-plugin</artifactId>
-           </plugin>
-           <plugin>
-               <executions>
-                   <execution>
-                       <goals>
-                           <goal>repackage</goal>
-                       </goals>
-                   </execution>
-               </executions>
-               <groupId>org.springframework.boot</groupId>
-               <artifactId>spring-boot-maven-plugin</artifactId>
-           </plugin>
-           <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-surefire-plugin</artifactId>
-               <configuration>
-                   <forkMode>always</forkMode>
-                   <skip>${maven.test.skip}</skip>
-                   <testFailureIgnore>${maven.test.failure.ignore}</testFailureIgnore>
-               </configuration>
-           </plugin>
-           <plugin>
-               <configuration>
-                   <configLocation>
-                       https://gitee.com/edgegallery/docs/raw/master/code-check-configs/edgegallery_checks.xml
-                   </configLocation>
-                   <consoleOutput>true</consoleOutput>
-                   <failOnViolation>true</failOnViolation>
-                   <violationSeverity>warning</violationSeverity>
-                  <!-- appDNSRulem tC, qCI, dSCp variables defined in below classes causes checkstyle validation
-                   failure, excluding these clases to avoid build failure-->
-                   <excludes>
-                       **/org/edgegallery/mecm/appo/apihandler/dto/AppRuleConfigDto.java,
-                       **/org/edgegallery/mecm/appo/apihandler/dto/TrafficFilterDto.java,
-                       **/org/edgegallery/mecm/appo/apihandler/dto/AppRuleDeleteConfigDto.java,
-                       **/org/edgegallery/mecm/appo/model/TrafficFilter.java,
-                       **/org/edgegallery/mecm/appo/model/AppRule.java
-                   </excludes>
-               </configuration>
-               <executions>
-                   <execution>
-                       <goals>
-                           <goal>check</goal>
-                       </goals>
-                   </execution>
-               </executions>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-checkstyle-plugin</artifactId>
-           </plugin>
-           <plugin>
-               <configuration>
-                   <failOnViolation>true</failOnViolation>
-                   <failurePriority>2</failurePriority>
-                   <maxAllowedViolations>0</maxAllowedViolations>
-                   <printFailingErrors>true</printFailingErrors>
-               </configuration>
-               <executions>
-                   <execution>
-                       <goals>
-                           <goal>check</goal>
-                       </goals>
-                   </execution>
-               </executions>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-pmd-plugin</artifactId>
-           </plugin>
-           <plugin>
-               <configuration>
-                  <failOnError>true</failOnError>
-               </configuration>
-               <executions>
-                   <execution>
-                       <goals>
-                           <goal>check</goal>
-                       </goals>
-                   </execution>
-               </executions>
-               <groupId>org.codehaus.mojo</groupId>
-               <artifactId>findbugs-maven-plugin</artifactId>
-           </plugin>
-           <!-- jacoco plugin for coverage report -->
-           <plugin>
-               <groupId>org.jacoco</groupId>
-               <artifactId>jacoco-maven-plugin</artifactId>
-               <configuration>
-                   <destFile>target/coverage-reports/jacoco-unit.exec</destFile>
-                   <dataFile>target/coverage-reports/jacoco-unit.exec</dataFile>
-               </configuration>
-               <executions>
-                   <execution>
-                       <id>jacoco-initialize</id>
-                       <goals>
-                           <goal>prepare-agent</goal>
-                       </goals>
-                   </execution>
-                   <execution>
-                       <id>jacoco-site</id>
-                       <phase>test</phase>
-                       <goals>
-                           <goal>report</goal>
-                       </goals>
-                   </execution>
-               </executions>
-           </plugin>
-       </plugins>
-   </build>
-   <reporting>
-       <plugins>
-           <plugin>
-               <configuration>
-                   <compilerArgument>-Xlint:all</compilerArgument>
-                   <showDeprecation>true</showDeprecation>
-                   <showWarnings>true</showWarnings>
-                   <source>1.8</source>
-                   <target>1.8</target>
-               </configuration>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-compiler-plugin</artifactId>
-           </plugin>
-           <plugin>
-               <configuration>
-                   <configLocation>
-                       https://gitee.com/edgegallery/docs/raw/master/code-check-configs/edgegallery_checks.xml
-                   </configLocation>
-                  <failOnViolation>true</failOnViolation>
-                   <violationSeverity>warning</violationSeverity>
-               </configuration>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-checkstyle-plugin</artifactId>
-           </plugin>
-           <plugin>
-               <groupId>org.codehaus.mojo</groupId>
-               <artifactId>findbugs-maven-plugin</artifactId>
-           </plugin>
-       </plugins>
-   </reporting>
-   
+        <plugins>
+            <plugin>
+                <configuration>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>always</forkMode>
+                    <skip>${maven.test.skip}</skip>
+                    <testFailureIgnore>${maven.test.failure.ignore}</testFailureIgnore>
+                </configuration>
+            </plugin>
+            <plugin>
+                <configuration>
+                    <configLocation>
+                        https://gitee.com/edgegallery/docs/raw/master/code-check-configs/edgegallery_checks.xml
+                    </configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>warning</violationSeverity>
+                    <!-- appDNSRulem tC, qCI, dSCp variables defined in below classes causes checkstyle validation
+                     failure, excluding these clases to avoid build failure-->
+                    <excludes>
+                        **/org/edgegallery/mecm/appo/apihandler/dto/AppRuleConfigDto.java,
+                        **/org/edgegallery/mecm/appo/apihandler/dto/TrafficFilterDto.java,
+                        **/org/edgegallery/mecm/appo/apihandler/dto/AppRuleDeleteConfigDto.java,
+                        **/org/edgegallery/mecm/appo/model/TrafficFilter.java,
+                        **/org/edgegallery/mecm/appo/model/AppRule.java
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <configuration>
+                    <failOnViolation>true</failOnViolation>
+                    <failurePriority>2</failurePriority>
+                    <maxAllowedViolations>0</maxAllowedViolations>
+                    <printFailingErrors>true</printFailingErrors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <configuration>
+                    <failOnError>true</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+            </plugin>
+            <!-- jacoco plugin for coverage report -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <destFile>target/coverage-reports/jacoco-unit.exec</destFile>
+                    <dataFile>target/coverage-reports/jacoco-unit.exec</dataFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <configuration>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <configuration>
+                    <configLocation>
+                        https://gitee.com/edgegallery/docs/raw/master/code-check-configs/edgegallery_checks.xml
+                    </configLocation>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>warning</violationSeverity>
+                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
 </project>
