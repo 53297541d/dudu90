@@ -41,6 +41,14 @@ public interface AppInstanceInfoService {
     List<AppInstanceInfo> getAllAppInstanceInfo(String tenantId);
 
     /**
+     * Retrieves all application instance information by mec_host.
+     *
+     * @param mec_host mec_host
+     * @return application instance information
+     */
+    List<AppInstanceInfo> getAllAppInstanceInfoByMecHost(String mec_host);
+
+    /**
      * Retrieves application instance information by mec host.
      *
      * @param tenantId tenant ID

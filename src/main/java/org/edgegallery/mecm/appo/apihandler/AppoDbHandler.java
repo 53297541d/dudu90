@@ -118,7 +118,6 @@ public class AppoDbHandler {
                     List<@Pattern(regexp = APP_INST_ID_REGX) String> appinstanceids) {
 
         LOGGER.info("Retrieve application instance infos");
-
         List<AppInstanceInfoDto> appInstanceInfosDto = new LinkedList<>();
         List<AppInstanceInfo> appInstanceInfos = appInstanceInfoService.getAllAppInstanceInfo(tenantId);
         if (appInstanceInfos == null || appInstanceInfos.isEmpty()) {
@@ -139,6 +138,33 @@ public class AppoDbHandler {
             if (appinstanceids.contains(tenantAppInstanceInfo.getAppInstanceId())) {
                 appInstanceInfosDto.add(mapper.map(tenantAppInstanceInfo, AppInstanceInfoDto.class));
             }
+        }
+        if (appInstanceInfosDto.isEmpty()) {
+            LOGGER.error("app instance info does not exist");
+            throw new NoSuchElementException(Constants.RECORD_NOT_FOUND);
+        }
+        return new ResponseEntity<>(new AppoResponse(appInstanceInfosDto), HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves application instance information.
+     *
+     * @param mecHostIp mecHost ip
+     * @return application instance information
+     */
+    @ApiOperation(value = "Retrieves application instance info by mecHost ip", response = AppoResponse.class)
+    @GetMapping(value = "/mechosts/{mechost_ip}/app_instance_infos", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MECM_TENANT') || hasRole('MECM_ADMIN') || hasRole('MECM_GUEST')")
+    public ResponseEntity<AppoResponse> getAllAppInstanceInfoByMecHost(
+        @ApiParam(value = "mechost IP") @PathVariable("mechost_ip") @Pattern(regexp = Constants.HOST_IP_REGX) @Size(
+            max = 15) String mecHostIp) {
+
+        LOGGER.info("Retrieve application instance infos by mecHostIp");
+        List<AppInstanceInfoDto> appInstanceInfosDto = new LinkedList<>();
+        List<AppInstanceInfo> appInstanceInfos = appInstanceInfoService.getAllAppInstanceInfoByMecHost(mecHostIp);
+        for (AppInstanceInfo mecHostAppInstanceInfo : appInstanceInfos) {
+            ModelMapper mapper = new ModelMapper();
+            appInstanceInfosDto.add(mapper.map(mecHostAppInstanceInfo, AppInstanceInfoDto.class));
         }
         if (appInstanceInfosDto.isEmpty()) {
             LOGGER.error("app instance info does not exist");
