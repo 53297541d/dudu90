@@ -67,6 +67,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         ddl-auto: validate
     open-in-view: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
 #### security config ####
 security:
   oauth2:
