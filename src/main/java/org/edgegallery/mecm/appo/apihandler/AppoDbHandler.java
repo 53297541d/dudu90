@@ -149,17 +149,21 @@ public class AppoDbHandler {
     /**
      * Retrieves application instance information.
      *
+     * @param tenantId       tenant ID
      * @param mecHostIp mecHost ip
      * @return application instance information
      */
     @ApiOperation(value = "Retrieves application instance info by mecHost ip", response = AppoResponse.class)
-    @GetMapping(value = "/mechosts/{mechost_ip}/app_instance_infos", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/tenants/{tenant_id}/mechosts/{mechost_ip}/app_instance_infos",
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MECM_TENANT') || hasRole('MECM_ADMIN') || hasRole('MECM_GUEST')")
     public ResponseEntity<AppoResponse> getAllAppInstanceInfoByMecHost(
+        @ApiParam(value = "tenant id") @PathVariable("tenant_id") @Pattern(regexp = TENENT_ID_REGEX) @Size(
+            max = 64) String tenantId,
         @ApiParam(value = "mechost IP") @PathVariable("mechost_ip") @Pattern(regexp = Constants.HOST_IP_REGX) @Size(
             max = 15) String mecHostIp) {
 
-        LOGGER.info("Retrieve application instance infos by mecHostIp");
+        LOGGER.info("Retrieve application instance infos by mecHostIp, current tenantId is {}", tenantId);
         List<AppInstanceInfoDto> appInstanceInfosDto = new LinkedList<>();
         List<AppInstanceInfo> appInstanceInfos = appInstanceInfoService.getAllAppInstanceInfoByMecHost(mecHostIp);
         for (AppInstanceInfo mecHostAppInstanceInfo : appInstanceInfos) {
